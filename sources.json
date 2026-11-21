@@ -1,0 +1,11 @@
+{
+  "_help": "Servers Chobi connects to. Add more from the Servers page, or by hand (see AGENTS.md, 'Adding a server'). Types: dhakaflix (portal page + h5ai hosts), h5ai, autoindex (plain Apache/nginx/lighttpd folder listings). Categories with section 'Movies' go into the movie index.",
+  "sources": [
+    {
+      "id": "dhakaflix",
+      "name": "DhakaFlix",
+      "type": "dhakaflix",
+      "portal": "http://172.16.50.4/"
+    }
+  ]
+}

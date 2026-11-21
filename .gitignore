@@ -1,0 +1,10 @@
+# Generated at runtime (movie index, genres, posters, subtitles, your watch history)
+cache/
+__pycache__/
+*.pyc
+*.tmp
+# Local editor/agent settings
+.claude/
+.vscode/
+.idea/
+.DS_Store
