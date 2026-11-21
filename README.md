@@ -52,4 +52,8 @@ So the setup is: **code on GitHub, Chobi running on a device at home, and every 
 
 Read **[AGENTS.md](AGENTS.md)**: architecture, rules, API and how to verify changes. Run the tests with `python3 -m unittest discover -s tests`.
 
+## License
+
+[MIT](LICENSE). Free to use, change and share; keep the copyright notice.
+
 *Unofficial. Chobi only reads what the public servers already list.*
