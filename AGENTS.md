@@ -42,8 +42,12 @@ static/
     servers.js   Add/remove servers, rebuild index
     main.js      Hash router, theme, global shortcuts (loaded last)
 cache/           Generated: movies.json, genres.json, history.json, thumbs/, subs/ (safe to delete)
+Dockerfile       python:3.13-alpine + Pillow; runs as uid 1000, data in the /data volume (CHOBI_DATA)
+compose.yaml     `docker compose up -d` → port 8090, named volume chobi-data, restart unless-stopped
 tests/           python3 -m unittest discover -s tests
 ```
+
+**Data location:** everything Chobi writes (`sources.json`, `cache/`) goes under `CHOBI_DATA` (default: the project folder; `/data` in Docker). On first start in an empty data folder, the bundled `sources.json` is copied there. New code that writes files must use `DATA` (server.py) or the `CHOBI_DATA` pattern used for `CACHE` in movies.py, genres.py and subs.py.
 
 ## How it works
 
@@ -116,6 +120,8 @@ python3 server.py --port 8091   # in another terminal, then:
 curl -s localhost:8091/app.js -o /tmp/chobi-app.js && node --check /tmp/chobi-app.js   # bundle must parse
 curl -s -H 'Accept-Encoding: gzip' -o /dev/null -w '%{size_download}\n' localhost:8091/app.js   # keep app.js under ~32 KB gz
 ```
+
+For container changes: `docker build -t chobi . && docker run --rm -p 8096:8090 -v chobi-test:/data chobi`, then check that `/api/movies/status` reaches `ready` and that a poster loads.
 
 Then open the app and check: Movies search ("dark.knight", "interstelar"), a detail sheet, Play (Heat 1995 720p plays in Chrome), the CC panel (Heat 1995 has 40+ English and 1 Bangla result), For you, Browse, Servers. Check the browser console for errors. Use dark and light themes, and a phone-width window.
 

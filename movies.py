@@ -9,13 +9,14 @@ listing requests per full crawl; refreshed at most once a day.
 import concurrent.futures
 import gzip
 import json
+import os
 import re
 import threading
 import time
 import urllib.parse
 from pathlib import Path
 
-CACHE = Path(__file__).resolve().parent / "cache" / "movies.json"
+CACHE = Path(os.environ.get("CHOBI_DATA") or Path(__file__).resolve().parent) / "cache" / "movies.json"
 MAX_AGE = 24 * 3600
 WORKERS = 4
 MAX_DEPTH = 3

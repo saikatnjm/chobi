@@ -26,6 +26,7 @@ import hashlib
 import html
 import json
 import io
+import os
 import re
 import shutil
 import subprocess
@@ -44,8 +45,14 @@ import subs
 
 ROOT = Path(__file__).resolve().parent
 STATIC = ROOT / "static"
-SOURCES_FILE = ROOT / "sources.json"
-POSTER_DIR = ROOT / "cache" / "thumbs"
+# Everything Chobi writes (server list, index, posters, history) lives under DATA.
+# Defaults to the project folder; the Docker image sets CHOBI_DATA=/data (a volume).
+DATA = Path(os.environ.get("CHOBI_DATA") or ROOT).resolve()
+SOURCES_FILE = DATA / "sources.json"
+if not SOURCES_FILE.exists() and (ROOT / "sources.json").exists():
+    DATA.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / "sources.json", SOURCES_FILE)  # first run in a fresh data folder
+POSTER_DIR = DATA / "cache" / "thumbs"
 THUMB_W = 300  # poster thumbnails: ~10-25 KB instead of 50-400 KB
 TIMEOUT = 12
 UA = "Chobi/2.0 (local media front end)"
@@ -412,7 +419,7 @@ MOVIES = movies.MovieIndex(lambda hid, href: list_dir(hid, href), movie_categori
 GENRES = genres.Genres()
 
 # Watch history ("Continue watching"), kept on this machine only.
-HISTORY_FILE = ROOT / "cache" / "history.json"
+HISTORY_FILE = DATA / "cache" / "history.json"
 HISTORY_LOCK = threading.Lock()
 
 
@@ -981,7 +988,7 @@ def main():
                 save_poster_map()
     threading.Thread(target=autosave, daemon=True).start()
     print(f"Chobi running at http://127.0.0.1:{args.port}/", flush=True)
-    if args.bind == "0.0.0.0":
+    if args.bind == "0.0.0.0" and not os.environ.get("CHOBI_IN_DOCKER"):
         try:  # the address other devices on your Wi-Fi can use (no packet is sent)
             s = __import__("socket").socket(2, 2)
             s.connect(("172.16.50.4", 80))

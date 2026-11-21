@@ -17,6 +17,7 @@ import concurrent.futures
 import gzip
 import hashlib
 import json
+import os
 import re
 import struct
 import time
@@ -26,7 +27,7 @@ from pathlib import Path
 
 API = "https://rest.opensubtitles.org/search/"
 UA = "TemporaryUserAgent"  # the public user agent the legacy REST API accepts
-CACHE = Path(__file__).resolve().parent / "cache" / "subs"
+CACHE = Path(os.environ.get("CHOBI_DATA") or Path(__file__).resolve().parent) / "cache" / "subs"
 LANGS = {"eng": "English", "ben": "Bangla"}
 AD_RE = re.compile(r"osdb\.link|opensubtitles|watch online movies|advertise your product|subtitles by|"
                    r"api\.opensubtitles|www\.[a-z0-9-]+\.(com|net|org|link)", re.I)

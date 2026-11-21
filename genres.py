@@ -11,6 +11,7 @@ Only generic genre queries are sent; nothing about the user or their library.
 import csv
 import io
 import json
+import os
 import re
 import threading
 import time
@@ -19,7 +20,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-CACHE = Path(__file__).resolve().parent / "cache" / "genres.json"
+CACHE = Path(os.environ.get("CHOBI_DATA") or Path(__file__).resolve().parent) / "cache" / "genres.json"
 MAX_AGE = 30 * 24 * 3600
 ENDPOINT = "https://query.wikidata.org/sparql"
 UA = "Chobi/2.0 (local media front end; genre lookup)"

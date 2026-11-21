@@ -1,0 +1,14 @@
+# docker compose up -d   →   http://localhost:8090 (and http://<this PC's IP>:8090 on your Wi-Fi)
+services:
+  chobi:
+    build: .
+    image: chobi:latest
+    container_name: chobi
+    ports:
+      - "8090:8090"
+    volumes:
+      - chobi-data:/data   # server list, movie index, posters, subtitles, watch history
+    restart: unless-stopped
+
+volumes:
+  chobi-data:

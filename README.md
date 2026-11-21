@@ -10,6 +10,21 @@ python3 server.py
 
 Then open **http://127.0.0.1:8090/**. You need Python 3.8 or newer and nothing else (on Windows, use `python server.py`). The first start builds the movie index, which takes about 10 seconds.
 
+## Run with Docker
+
+```bash
+docker compose up -d
+```
+
+Then open **http://localhost:8090/**; phones and TVs on the same Wi-Fi use `http://<this PC's IP>:8090/`. It starts automatically with Docker (`restart: unless-stopped`), so it stays on as long as the PC is on.
+
+- Your server list, movie index, posters, subtitles and watch history live in the `chobi-data` volume, so they survive updates and restarts.
+- To update after a `git pull`: `docker compose up -d --build`.
+- Logs: `docker compose logs -f`. To stop: `docker compose down` (add `-v` to also delete your data).
+- Without Compose: `docker build -t chobi . && docker run -d --name chobi -p 8090:8090 -v chobi-data:/data --restart unless-stopped chobi`.
+
+The container still needs to reach the BDIX servers, so run it on a machine on your BDIX-connected network.
+
 ## Watching on your phone, TV or another computer
 
 Chobi has to run on a device inside a network that can reach the BDIX servers (for example, your home Wi-Fi on a BDIX-connected ISP). Other devices then open it in a browser:
